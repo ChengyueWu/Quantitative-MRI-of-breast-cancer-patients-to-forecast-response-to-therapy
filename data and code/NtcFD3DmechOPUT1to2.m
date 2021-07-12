@@ -338,7 +338,7 @@ SSEnew = sum((Zf-TCnewtest).^2);
 
 %Calculating concordance correlation coefficient of the results of the
 %newest parameter set
-cccTC = ccc_barnes2(Zf,TCnewtest);
+cccTC = CalcCCC(Zf,TCnewtest);
 
 %Setting intermediate value holders for the optimization process
 intermedparams = newtest;
@@ -470,7 +470,7 @@ while SSE>1e3 && iter<maxiter && cccTC<1
         intermedparams = newtest;
         clear TCintermed;
         TCintermed = TCnewtest;
-        cccTC = ccc_barnes2(Zf,TCnewtest);
+        cccTC = CalcCCC(Zf,TCnewtest);
         SSE = SSEnew; 
         if ~rem(iter,3) 
             lam = lam/9;

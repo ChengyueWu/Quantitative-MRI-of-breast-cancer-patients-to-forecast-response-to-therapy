@@ -24,7 +24,7 @@ function [Dice,PCC,CCC]=DiceAndCC(A,B)
 %Pearson's correlation coefficient
 PCC = corr2(A,B);
 %Concordance correlation coefficient
-CCC = ccc_barnes2(reshape(A,[],1),reshape(B,[],1));
+CCC = CalcCCC(reshape(A,[],1),reshape(B,[],1));
 
 %Calculations for the Dice coefficient for overlap
 A(A>1) = 1;

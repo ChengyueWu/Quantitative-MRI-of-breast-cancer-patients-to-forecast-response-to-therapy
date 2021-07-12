@@ -11,7 +11,7 @@
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-function [ccc] = CalcCCC(x,y)
+function [ccc] = ccc_barnes2(x,y)
 % Inputs:
 %      x    :     first vector                          double  (sy,sx*sz)
 %      y    :     second vector                         double  (sy,sx*sz)
