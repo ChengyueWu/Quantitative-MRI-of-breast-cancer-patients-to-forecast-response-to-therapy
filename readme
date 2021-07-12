@@ -1,1 +1,11 @@
+This repository provide demo codes and data of the modeling pipeline for patient-specific prediction of breast cancer response to neoadjuvant therapy. 
+The framework is illustrated in the document, "codestructure".
 
+
+Please refers to this paper for more details on the methodology and associated image processing pipeline:
+
+Angela M. Jarrett, Anum S. Kazerouni, Chengyue Wu, John Virostko, Anna G. Sorace, Julie C. DiCarlo, David A. Hormuth, II,
+David A. Ekrut, Debra Patt, Boone Goodgame, Sarah Avery, Thomas E. Yankeelov. Quantitative magnetic resonance imaging and tumor
+forecasting of breast cancer patients in the community setting. Nature Propotol, 2021 (in press).
+
+Further questions and discussion are welcome through the repository, or via email (ajarrett@utexas.edu, cw35926@utexas.edu).
