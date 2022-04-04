@@ -6,14 +6,6 @@
 %boundary slices.
 %Defines the boundary types using the formatting required in the 
 %forwardsolve function.
-
-%%% Authors:     Angela M. Jarrett, Chengyue Wu, Thomas E. Yankeelov
-%%% Last edit:   July 12, 2021
-%%% Affiliation: UT Austin
-%%% Reference:   Jarrett et al., "Quantitative magnetic resonance imaging
-%%%              and tumor forecasting of breast cancer patients in the community
-%%%              setting", Nature Protocol.
-
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function [BCF] = Boundaries3DUT(n,Zbw)
@@ -41,9 +33,9 @@ gridsize = [size(Zbw,1),size(Zbw,2)];
 
 %Zeroing out edges 
 Zbw(end,:,:) = 0;
-Zbw(1,:,:) = 0;
+Zbw(1,:,:)   = 0;
 Zbw(:,end,:) = 0;
-Zbw(:,1,:) = 0;
+Zbw(:,1,:)   = 0;
 
 %loop through each slice to define the boundary
 for jj = 1:size(Zbw,3)
@@ -91,18 +83,20 @@ for jj = 1:size(Zbw,3)
     end
 
     %Find each of the voxels in the boundary tracing
-    bnodes = zeros(1,size(find(tracing==1),1)+2);
+    bnodes  = zeros(1,size(find(tracing==1),1)+2);
     bnodesx = zeros(1,size(find(tracing==1),1)+2);
     bnodesy = zeros(1,size(find(tracing==1),1)+2);
-    bnodes(3) = start;
+    bnodes(3)  = start;
     bnodesx(3) = newcount - 1;
-    bnodesy(3) = count - 1;
+    bnodesy(3) = count    - 1;
 
+    removevox = []; 
     %Counter-clockwise algorithm to determine what type of edge the voxel
     %in the tracing is
-    for ii = 3:size(find(tracing==1),1)+1
+    for ii = 3:size(find(tracing==1),1)+2
         rowcur = floor(bnodes(ii)/gridsize(2))+1;
-        colcur = mod(bnodes(ii),gridsize(1));
+        colcur = mod(bnodes(ii),  gridsize(1));
+        valid_flag = 0;
         for position = 1:8
             if(position==1&&(rowcur-1<1||colcur+1>n))
                  continue;   
@@ -128,64 +122,89 @@ for jj = 1:size(Zbw,3)
             if(position==8&&rowcur-1<1)
                  continue;    
             end
-            if((position==1)&&(tracing(rowcur-1,colcur+1)~=0)&&((((rowcur-1)-1)*gridsize(2)+colcur+1)~=bnodes(ii-1))&&((((rowcur-1)-1)*gridsize(2)+colcur+1)~=bnodes(ii-2)))
+            
+            if((position==1)&&(tracing(rowcur-1,colcur+1)~=0)&&(~ismember((((rowcur-1)-1)*gridsize(2)+colcur+1),bnodes))&&(~ismember((((rowcur-1)-1)*gridsize(2)+colcur+1),bnodes)))
             %down 1, right 1
                 bnodes(ii+1) = ((rowcur-1)-1)*gridsize(2) + colcur + 1;
                 bnodesx(ii+1) = colcur+1;
                 bnodesy(ii+1) = rowcur-1;
+                valid_flag = 1;
                 break
-            elseif((position==2)&&(tracing(rowcur,colcur+1)~=0)&&((((rowcur)-1)*gridsize(2)+colcur+1)~=bnodes(ii-1))&&((((rowcur)-1)*gridsize(2)+colcur+1)~=bnodes(ii-2)))
+            elseif((position==2)&&(tracing(rowcur,colcur+1)~=0)&&(~ismember((((rowcur)-1)*gridsize(2)+colcur+1),bnodes))&&(~ismember((((rowcur)-1)*gridsize(2)+colcur+1), bnodes)))
             %down 0, right 1
                 bnodes(ii+1) = ((rowcur)-1)*gridsize(2) + colcur + 1;    
                 bnodesx(ii+1) = colcur+1;
                 bnodesy(ii+1) = rowcur;  
+                valid_flag = 1;
                 break
-            elseif((position==3)&&(tracing(rowcur+1,colcur+1)~=0)&&((((rowcur+1)-1)*gridsize(2)+colcur+1)~=bnodes(ii-1))&&((((rowcur+1)-1)*gridsize(2)+colcur+1)~=bnodes(ii-2)))
+            elseif((position==3)&&(tracing(rowcur+1,colcur+1)~=0)&&(~ismember((((rowcur+1)-1)*gridsize(2)+colcur+1),bnodes))&&(~ismember((((rowcur+1)-1)*gridsize(2)+colcur+1),bnodes)))
             %up 1, right 1
                 bnodes(ii+1) = ((rowcur+1)-1)*gridsize(2) + colcur + 1;
                 bnodesx(ii+1) = colcur+1;
                 bnodesy(ii+1) = rowcur+1;
+                valid_flag = 1;
                 break
-            elseif((position==4)&&(tracing(rowcur+1,colcur)~=0)&&((((rowcur+1)-1)*gridsize(2)+colcur)~=bnodes(ii-1))&&((((rowcur+1)-1)*gridsize(2)+colcur)~=bnodes(ii-2)))
+            elseif ((position==4)&&(tracing(rowcur+1,colcur)~=0)&&(~ismember((((rowcur+1)-1)*gridsize(2)+colcur),bnodes))&&(~ismember((((rowcur+1)-1)*gridsize(2)+colcur),bnodes)))
             %up 1, right 0    
                 bnodes(ii+1) = ((rowcur+1)-1)*gridsize(2) + colcur;
                 bnodesx(ii+1) = colcur;
                 bnodesy(ii+1) = rowcur+1;
+                valid_flag = 1;
                 break
-            elseif((position==5)&&(tracing(rowcur+1,colcur-1)~=0)&&((((rowcur+1)-1)*gridsize(2)+colcur-1)~=bnodes(ii-1))&&((((rowcur+1)-1)*gridsize(2)+colcur-1)~=bnodes(ii-2)))
+            elseif((position==5)&&(tracing(rowcur+1,colcur-1)~=0)&&(~ismember((((rowcur+1)-1)*gridsize(2)+colcur-1),bnodes))&&(~ismember((((rowcur+1)-1)*gridsize(2)+colcur-1),bnodes)))
             %up 1, left 1    
                 bnodes(ii+1) = ((rowcur+1)-1)*gridsize(2) + colcur - 1;
                 bnodesx(ii+1) = colcur-1;
                 bnodesy(ii+1) = rowcur+1;
+                valid_flag = 1;
                 break
-            elseif((position==6)&&(tracing(rowcur,colcur-1)~=0)&&((((rowcur)-1)*gridsize(2)+colcur-1)~=bnodes(ii-1))&&((((rowcur)-1)*gridsize(2)+colcur-1)~=bnodes(ii-2)))
+            elseif((position==6)&&(tracing(rowcur,colcur-1)~=0)&&(~ismember((((rowcur)-1)*gridsize(2)+colcur-1),bnodes))&&(~ismember((((rowcur)-1)*gridsize(2)+colcur-1),bnodes)))
             %up 0, left 1  
                 bnodes(ii+1) = ((rowcur)-1)*gridsize(2) + colcur - 1;
                 bnodesx(ii+1) = colcur-1;
                 bnodesy(ii+1) = rowcur;
+                valid_flag = 1;
                 break
-            elseif((position==7)&&(tracing(rowcur-1,colcur-1)~=0)&&((((rowcur-1)-1)*gridsize(2)+colcur-1)~=bnodes(ii-1))&&((((rowcur-1)-1)*gridsize(2)+colcur-1)~=bnodes(ii-2)))
+            elseif((position==7)&&(tracing(rowcur-1,colcur-1)~=0)&&(~ismember((((rowcur-1)-1)*gridsize(2)+colcur-1),bnodes))&&(~ismember((((rowcur-1)-1)*gridsize(2)+colcur-1),bnodes)))
             %down 1, left 1    
                 bnodes(ii+1) = ((rowcur-1)-1)*gridsize(2) + colcur - 1; 
                 bnodesx(ii+1) = colcur-1;
                 bnodesy(ii+1) = rowcur-1;
+                valid_flag = 1;
                 break
-            elseif((position==8)&&(tracing(rowcur-1,colcur)~=0)&&((((rowcur-1)-1)*gridsize(2)+colcur)~=bnodes(ii-1))&&((((rowcur-1)-1)*gridsize(2)+colcur)~=bnodes(ii-2)))
+            elseif((position==8)&&(tracing(rowcur-1,colcur)~=0)&&(~ismember((((rowcur-1)-1)*gridsize(2)+colcur),bnodes))&&(~ismember((((rowcur-1)-1)*gridsize(2)+colcur),bnodes)))
             %down 1, left 0
                 bnodes(ii+1) = ((rowcur-1)-1)*gridsize(2) + colcur;
                 bnodesx(ii+1) = colcur;
                 bnodesy(ii+1) = rowcur-1;
+                valid_flag = 1;
                 break
-            end    
-        end   
+            end   
+        end  
+        if ~valid_flag
+            removevox = [removevox, ii];
+            bnodes(ii+1)  = bnodes(ii-1);
+            bnodesx(ii+1) = bnodesx(ii-1);
+            bnodesy(ii+1) = bnodesy(ii-1);
+        end
     end
+    
+    
     %removing placeholders
+% % %     bnodes(removevox(1:end-1))  = [];
+% % %     bnodesx(removevox(1:end-1)) = [];
+% % %     bnodesy(removevox(1:end-1)) = [];
+    
     bnodes(1:2) = [];
-    bnodes(end) = [];
+%     bnodes(end) = [];
     bnodesx(1:2) = [];
-    bnodesx(end) = [];
+%     bnodesx(end) = [];
     bnodesy(1:2) = [];
-    bnodesy(end) = [];
+%     bnodesy(end) = [];
+
+    [bnodes,idx] = unique(bnodes,'stable');
+    bnodesx = bnodesx(idx);
+    bnodesy = bnodesy(idx);
 
     %Identifying portions of the boundary for the boundary condition
     %implementation
@@ -213,7 +232,7 @@ for jj = 1:size(Zbw,3)
         if(((before==(bnodes(bb)-1))||(before==(bnodes(bb)-gridsize(1)-1)))...
              &&((after==(bnodes(bb)+gridsize(1)+1))||(after==(bnodes(bb)+gridsize(1)))))            
             brcorns(end+1,1) = bnodes(bb);
-            brcorns(end,2) = bb;    
+            brcorns(end,2)   = bb;    
         %Corners-Bottom Right
         elseif(((before==(bnodes(bb)-gridsize(1)))||(before==(bnodes(bb)-gridsize(1)+1)))...
              &&((after==(bnodes(bb)-1))||(after==(bnodes(bb)+gridsize(1)-1))))
@@ -257,9 +276,9 @@ for jj = 1:size(Zbw,3)
     tlcorns(1,:) = [];
 
     downers = sortrows([blcorns;bums;brcorns],2);
-    rights = sortrows([brcorns;righs;trcorns],2);
-    uppers = sortrows([trcorns;tops;tlcorns],2);
-    lefts = sortrows([tlcorns;lefs;blcorns],2);
+    rights  = sortrows([brcorns;righs;trcorns],2);
+    uppers  = sortrows([trcorns;tops;tlcorns],2);
+    lefts   = sortrows([tlcorns;lefs;blcorns],2);
 
     temp(downers(:,1)) = temp(downers(:,1)) + 1;
     temp(uppers(:,1)) = temp(uppers(:,1)) + 2;
@@ -270,9 +289,9 @@ for jj = 1:size(Zbw,3)
     BCF(:,:,jj) = BCF(:,:,jj) + reshape(temp,gridsize)';
 end
 
-BCF(1,:,:) = BCF(1,:,:) + 1;
+BCF(1,:,:)   = BCF(1,:,:)   + 1;
 BCF(end,:,:) = BCF(end,:,:) + 2;
-BCF(:,1,:) = BCF(:,1,:) + 20;
+BCF(:,1,:)   = BCF(:,1,:)   + 20;
 BCF(:,end,:) = BCF(:,end,:) + 10;
 
 %Defining what slices might be above or below a given slice to determine
@@ -281,6 +300,7 @@ for ii = 1:size(Zbw,3)
     ZBW = Zbw(:,:,ii);
     ZBW(isnan(ZBW)) = 0;
     temp = zeros(size(ZBW));
+    
     
     if ii == 1
         above = Zbw(:,:,ii+1);
@@ -303,8 +323,7 @@ for ii = 1:size(Zbw,3)
         below(isnan(below)) = 0;
         bummer = ZBW - below;
         b = find(bummer == 1);
-    end        
-    
+    end    
     temp(a) = temp(a) + 100;
     temp(b) = temp(b) + 200;
     
@@ -313,9 +332,9 @@ for ii = 1:size(Zbw,3)
 end
 
 BCF(end,:,:) = 0;
-BCF(1,:,:) = 0;
+BCF(1,:,:)   = 0;
 BCF(:,end,:) = 0;
-BCF(:,1,:) = 0;
+BCF(:,1,:)   = 0;
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 % end of file
