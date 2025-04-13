@@ -1,6 +1,6 @@
-This is a demo showing the key steps in longitudinal MRI processing for BCa digital twin building. 
+This is a demo showing the key steps in longitudinal MRI processing for BCa digital twin building, consisting of main scripts "F[1-5]_..." and functions being called. 
 
-Download demo data from 
-
+Download demo data from google drive: 
+https://drive.google.com/drive/folders/1e2sNkGIHMfmG4Vr6buiU_4PjUrilCy8K?usp=drive_link
 
 When applying to specific use cases, adjust the pipeline based on details of available data and study purpose
