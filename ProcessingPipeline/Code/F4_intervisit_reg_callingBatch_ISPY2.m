@@ -30,7 +30,7 @@ for pidx = 1:numel(Patient_list)
     outpath = [matpath, subname, '/'];
     
     %% Defining list of visits for registration based on available slices
-    Visits      = [1, 2, 3]; %
+    Visits      = [1, 2, 3];
     Visit_num_f = 2; 
     target_list = [1, 3]; 
     

@@ -108,7 +108,7 @@ for patientID = 1:numel(Patient_list)
                 ax.FontSize = 22;
                 saveas(h1, [figpath CaseNum, '_DWI_3DRigidReg_f',num2str(f),'.jpg'])
             end
-            close all
+            % close all
             %}
         
 
@@ -144,7 +144,7 @@ for patientID = 1:numel(Patient_list)
 
                 saveas(h3, [figpath CaseNum, '_ParaMap_DWImask_3DRigidReg.jpg'])
                 
-                close all
+                % close all
                 %} 
 
         save([datapath CaseNum '_DWI_3DRigidReg.mat'],'DWI_reg','RA_dwi','tform3D_DWI')

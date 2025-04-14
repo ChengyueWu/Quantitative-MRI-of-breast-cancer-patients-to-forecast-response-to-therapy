@@ -126,7 +126,15 @@ for pidx = 1:length(PatientList)
             %%% plots (optional): FOV & Slice ovelapping
             %
             Myplot_FOVs_Overlapping  (EdgeXY_dce, EdgeXY_dwi, NaN, NaN, figpath, CaseNum) %%EdgeXY_t1m,
-            Myplot_Slices_Overlapping(Zlist_dce,  Zlist_dwi,  NaN, NaN, figpath, CaseNum) %%Zlist_t1m,  
+            Myplot_Slices_Overlapping(Zlist_dce,  Zlist_dwi,  NaN, NaN, figpath, CaseNum) %%Zlist_t1m,
+
+
+            DataSets = {DCE.Data, DWI.Data};    %% t1m_breast, 
+            Names = {'DCE',   'DWI'};                 %% 'T1Mapping', 
+            Slices= [slc_dce, slc_dwi];               %% slc_t1m,     
+
+            Myplot_CentralSlices_Visual (CaseNum, figpath, DataSets, Names, Slices)
+            pause
             %}
             
         %% Alignment 1: Transverse 
@@ -166,6 +174,9 @@ for pidx = 1:length(PatientList)
 
             Myplot_CentralSlices_Visual (CaseNum, figpath, DataSets, Names, Slices)
             Myplot_CentralSlices_Compare(CaseNum, figpath, DataSets, Names, Slices)
+
+            pause
+                
             %}
 
         %% Alignment 2: Interpolation through slices
@@ -379,7 +390,6 @@ function Myplot_FOVs_Overlapping(EdgeXY_dce, EdgeXY_dwi, EdgeXY_dti, EdgeXY_cest
     savename = [CaseNum, '_FOVs'];
     saveas(gcf, [figpath, savename, '.jpg'])
     
-    close all
 end
 
 function Myplot_Slices_Overlapping(Zlist_dce, Zlist_dwi, Zlist_dti, Zlist_cest, figpath, CaseNum) %Zlist_t1m,
@@ -423,7 +433,6 @@ function Myplot_Slices_Overlapping(Zlist_dce, Zlist_dwi, Zlist_dti, Zlist_cest, 
     savename = [CaseNum, '_Slices'];
     saveas(gcf, [figpath, savename, '.jpg'])
     
-    close all
     
 end
 

@@ -152,9 +152,7 @@ for idx = 1:length(Patient_list)
     
     %}
     
-    %% check deformation grid
-    close all
-    
+    %% check deformation grid 
     for v = [0,2]
         InputFilename  = [subname, 'T',num2str(v),'_MovingToBeRegTo_T1.mat'];
         load([inpath, InputFilename])
