@@ -1,7 +1,7 @@
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %Function to calculate von mises stress 
 
-%%% Authors:     Angela M. Jarrett, Chengyue Wu, Thomas E. Yankeelov
+%%% Authors:     Angela M. Jarrett, Chengyue Wu, David A. Hormuth, Thomas E. Yankeelov
 %%% Last edit:   July 12, 2021
 %%% Affiliation: UT Austin
 %%% Reference:   Jarrett et al., "Quantitative magnetic resonance imaging
