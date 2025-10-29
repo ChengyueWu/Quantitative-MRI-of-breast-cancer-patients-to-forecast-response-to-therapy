@@ -1,7 +1,7 @@
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %Function to calculate diffusion matrix
 
-%%% Authors:     Angela M. Jarrett, Chengyue Wu, Thomas E. Yankeelov
+%%% Authors:     Angela M. Jarrett, Chengyue Wu, David A. Hormuth, Thomas E. Yankeelov
 %%% Last edit:   July 12, 2021
 %%% Affiliation: UT Austin
 %%% Reference:   Jarrett et al., "Quantitative magnetic resonance imaging
@@ -3373,4 +3373,5 @@ Md = sparse(M(:,1),M(:,2),M(:,3),size(Fv,1),size(Fv,1));
 end
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 % end of file
